@@ -1,20 +1,14 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 import { render } from 'react-dom'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
 import './styles.css'
 
-////////////////////////////////////////////////////////////////////////////////
-// Requirements
-//
-
-let { string, func, number, bool } = React.PropTypes
-
 class Slider extends React.Component {
   static propTypes = {
-    initialIndex: number.isRequired,
-    autoplay: bool,
-    onTogglePlay: func,
-    duration: number
+    initialIndex: PropTypes.number.isRequired,
+    autoplay: PropTypes.bool,
+    onTogglePlay: PropTypes.func,
+    duration: PropTypes.number
   }
 
   static defaultProps = {
@@ -23,7 +17,7 @@ class Slider extends React.Component {
     initialIndex: 0
   }
 
-  render () {
+  render() {
     return (
       <div {...this.props}/>
     )
@@ -31,7 +25,7 @@ class Slider extends React.Component {
 }
 
 class SliderStage extends React.Component {
-  render () {
+  render() {
     return (
       <div {...this.props}/>
     )
@@ -39,13 +33,13 @@ class SliderStage extends React.Component {
 }
 
 class Slide extends React.Component {
-  render () {
+  render() {
     return <img {...this.props}/>
   }
 }
 
 class SliderControls extends React.Component {
-  render () {
+  render() {
     return (
       <div {...this.props}/>
     )
@@ -53,7 +47,7 @@ class SliderControls extends React.Component {
 }
 
 class SliderPrevious extends React.Component {
-  render () {
+  render() {
     return (
       <button {...this.props}/>
     )
@@ -61,7 +55,7 @@ class SliderPrevious extends React.Component {
 }
 
 class SliderPlayPause extends React.Component {
-  render () {
+  render() {
     return (
       <button {...this.props}/>
     )
@@ -69,11 +63,7 @@ class SliderPlayPause extends React.Component {
 }
 
 class SliderNext extends React.Component {
-  static contextTypes = {
-    next: func.isRequired
-  }
-
-  render () {
+  render() {
     return (
       <button {...this.props}/>
     )
@@ -81,15 +71,11 @@ class SliderNext extends React.Component {
 }
 
 class App extends React.Component {
-
-  constructor (props) {
-    super(props);
-    this.state = {
-      isPlaying: true
-    };
+  state = {
+    isPlaying: true
   }
 
-  render () {
+  render() {
     return (
       <div className="content">
         <h1>Slider</h1>
@@ -106,16 +92,15 @@ class App extends React.Component {
             <SliderNext>Next</SliderNext>
           </SliderControls>
 
-          <SliderStage style={{height: 400}}>
+          <SliderStage style={{ height: 400 }}>
             <Slide src="./slides/hamburger.png"/>
             <Slide src="./slides/chicken-nuggets.png"/>
             <Slide src="./slides/mcmuffin.png"/>
           </SliderStage>
         </Slider>
       </div>
-    );
+    )
   }
 }
 
-render(<App/>, document.getElementById('app'));
-
+render(<App/>, document.getElementById('app'))

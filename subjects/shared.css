@@ -3,27 +3,36 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 200;
 }
-
 button:focus {
   outline: 2px solid hsl(200, 50%, 50%);
 }
-
-#index ul {
-  padding: 0;
-  list-style: none;
-}
-
-#index a {
-  font-size: 50px;
-  display: block;
-  text-align: center;
+a:link,
+a:visited {
+  color: #00D;
   text-decoration: none;
-  color: hsl(200, 50%, 50%);
-  margin: 20px;
+}
+a:link:hover {
+  text-decoration: underline;
 }
 
-a.active {
-  color: hsl(300, 50%, 50%);
+#index .lecture-link {
+  font-size: 1.5em;
+}
+#index .lecture-link a:link,
+#index .lecture-link a:visited {
+  color: black;
+}
+#index table {
+  margin: 5em auto;
+}
+#index table tr.odd {
+  background: #e3e3e3;
+}
+#index table td {
+  padding: 10px;
+}
+#index table td.exercise-link {
+  padding-left: 20px;
 }
 
 .ContentToggle {
@@ -31,7 +40,6 @@ a.active {
   margin: 10px 0;
   background: #fff;
 }
-
 .ContentToggle__Summary {
   cursor: pointer;
   border: none;
@@ -45,17 +53,14 @@ a.active {
   font: inherit;
   border-bottom: solid 1px transparent;
 }
-
 .ContentToggle__Summary:before {
   display: inline-block;
   width: 1em;
   content: '▸';
 }
-
 .ContentToggle__Summary--is-open:before {
   content: '▾';
 }
-
 .ContentToggle__Details {
   padding: 0 10px;
 }
