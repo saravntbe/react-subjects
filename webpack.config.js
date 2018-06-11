@@ -1,70 +1,71 @@
-const fs = require('fs')
-const path = require('path')
-const webpack = require('webpack')
+const fs = require("fs");
+const path = require("path");
+const webpack = require("webpack");
+const OpenBrowserWebpackPlugin = require("open-browser-webpack-plugin");
 
-function isDirectory(dir) {
-  return fs.lstatSync(dir).isDirectory()
-}
-
-const SubjectsDir = path.join(__dirname, 'subjects')
-const SubjectDirs = fs.readdirSync(SubjectsDir).filter(function (dir) {
-  return isDirectory(path.join(SubjectsDir, dir))
-})
+const subjectsDir = path.join(__dirname, "subjects");
+const subjectDirs = fs
+  .readdirSync(subjectsDir)
+  .map(file => path.join(subjectsDir, file))
+  .filter(file => fs.lstatSync(file).isDirectory());
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: "source-map",
 
-  entry: SubjectDirs.reduce(function (entries, dir) {
-    if (fs.existsSync(path.join(SubjectsDir, dir, 'exercise.js')))
-      entries[dir + '-exercise'] = path.join(SubjectsDir, dir, 'exercise.js')
+  entry: subjectDirs.reduce(
+    (chunks, dir) => {
+      const base = path.basename(dir);
 
-    if (fs.existsSync(path.join(SubjectsDir, dir, 'solution.js')))
-      entries[dir + '-solution'] = path.join(SubjectsDir, dir, 'solution.js')
+      ["lecture", "exercise", "solution"].forEach(name => {
+        const file = path.join(dir, `${name}.js`);
 
-    if (fs.existsSync(path.join(SubjectsDir, dir, 'lecture.js')))
-      entries[dir + '-lecture'] = path.join(SubjectsDir, dir, 'lecture.js')
+        if (fs.existsSync(file)) {
+          chunks[`${base}-${name}`] = file;
+        }
+      });
 
-    return entries
-  }, {
-    shared: [ 'react', 'react-dom' ]
-  }),
+      return chunks;
+    },
+    {
+      shared: ["react", "react-dom"],
+      index: path.join(subjectsDir, "index.js")
+    }
+  ),
 
   output: {
-    path: '__build__',
-    filename: '[name].js',
-    chunkFilename: '[id].chunk.js',
-    publicPath: '__build__'
-  },
-
-  resolve: {
-    extensions: [ '', '.js', '.css' ]
+    path: "public",
+    filename: "[name].js",
+    chunkFilename: "[id].chunk.js",
+    publicPath: "/"
   },
 
   module: {
     loaders: [
-      { test: /\.css$/, loader: 'style!css' },
-      { test: /\.js$/, exclude: /node_modules|mocha-browser\.js/, loader: 'babel' },
-      { test: /\.woff(2)?$/,   loader: 'url?limit=10000&mimetype=application/font-woff' },
-      { test: /\.ttf$/, loader: 'file' },
-      { test: /\.eot$/, loader: 'file' },
-      { test: /\.svg$/, loader: 'file' },
-      { test: require.resolve('jquery'), loader: 'expose?jQuery' }
+      {
+        test: /\.js$/,
+        exclude: /node_modules|mocha-browser\.js/,
+        loader: "babel"
+      },
+      { test: /\.css$/, loader: "style!css" },
+      { test: /\.(ttf|eot|svg|png|jpg)$/, loader: "file" },
+      {
+        test: /\.woff(2)?$/,
+        loader: "url?limit=10000&mimetype=application/font-woff"
+      },
+      { test: require.resolve("jquery"), loader: "expose?jQuery" }
     ]
   },
 
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({ name: 'shared' })
+    new webpack.optimize.CommonsChunkPlugin({ name: "shared" }),
+    new OpenBrowserWebpackPlugin("http://localhost:8080")
   ],
 
   devServer: {
     quiet: false,
     noInfo: false,
     historyApiFallback: {
-      rewrites: [
-        { from: /ReduxDataFlow\/exercise.html/,
-          to: 'ReduxDataFlow\/exercise.html'
-        }
-      ]
+      rewrites: []
     },
     stats: {
       // Config for minimal console.log mess.
@@ -77,4 +78,4 @@ module.exports = {
       chunkModules: false
     }
   }
-}
+};
